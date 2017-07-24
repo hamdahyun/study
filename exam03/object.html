@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>exam</title>
+<link rel="stylesheet" href="common.css" />
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+$(function (){
+	var obj= {
+		init : function(){
+			this.setElements();
+		},
+		setElements : function(){
+			console.log('call');
+			console.log(obj2.init);
+			console.log(obj3.func);
+			console.log(obj3.num);
+			console.log(obj4);
+		}
+	};
+	var obj2 = {
+		init : function () {
+	      console.log('call2');
+	   }
+	};
+	var obj3 = {
+		func : function () {
+     		console.log('func');
+	   	},
+	  	num : 3,
+	};
+	var obj4 = {
+		e : 'e',
+		d : 'd',
+		b : 'b',
+		g : 'g',
+		c : 'c',
+		f : 'f',
+		a : 'a',
+		init : function(){
+			
+		}
+	};
+	obj.init();
+});
+</script>
+</head>
+<body>
+<!-- wrapper [s] -->
+<div id="wrapper">
+	<!-- header [s] -->
+	<div id="header">
+	</div>
+	<!-- header [e] -->
+	<hr />
+	<!-- container [s] -->
+	<div id="container">
+		<div class="exam_wrap">
+			<h1>Q. 함수 호출시 new 를 붙인 것과 안 붙인 것의 차이를 설명하세요.</h1>
+			<div class="exam_q">예시)<br>
+			var obj = function () {<br>
+			&nbsp;&nbsp;&nbsp;console.log(this);<br>
+			};<br>
+			obj();<br>
+			// new obj();
+			</div>
+			<ul class="mgt">
+				<li>* 오브젝트를 만들되 그 안에 proto 등의 속성에 함수의 프로토타입객체를 지정</li>
+				<li>* 함수의 컨테스트를 방금 만든 오브젝트로 해서 생성시의 인자객체를 전달하여 호출</li>
+				<li>* 만약 생성자의 호출결과가 null이 아닌 객체라면 instance가 그 결과가 됨.</li>
+			</ul>
+			<p class="dot">
+				이건 결국 프로토타입체이닝을 일으키기 위해서인데 new 통해서 생성해야만 특수한 속성인 __ proto __에 함수의 프로토타입을 지정할 수 있기 때문.<br>
+				new 키워드는 __ proto __의 설정 외에도 생성자 함수를 호출해주고 그 결과에 따라 인스턴스를 교체하는 등의 부가 기능도 갖고 있지만, 그건 얼마든지 흉내낼 수 있는 기능 <strong>오직 new 만 할 수 있는 기능은 __ proto __의 설정이라고 할 수 있습니다.</strong>
+			</p>
+		</div>
+		<div class="exam_wrap">
+			<h1>Q. 객체 내에서의 this 를 설명하세요.</h1>
+			<div class="exam_q">예시)<br>
+			var obj = {<br>
+			&nbsp;&nbsp;&nbsp;init : function () {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(this);<br>
+			&nbsp;&nbsp;&nbsp;}<br>
+			};<br>
+			obj.init();<br>
+			</div>
+			<p class="mgt dot">특정 객체의 매서드를 호출하는 경우, this는 해당 객체의 object를 가리킨다.</p>
+		</div>
+		<div class="exam_wrap">
+			<h1>Q. 객체 내의 다른 메서드를 호출해보세요.</h1>
+			<div class="exam_q">예시)<br>
+			var obj = {<br>
+			&nbsp;&nbsp;&nbsp;init : function () {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// setElements 함수를 호출해봐요~<br>
+			&nbsp;&nbsp;&nbsp;},<br>
+			&nbsp;&nbsp;&nbsp;setElements : function () {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log('call');<br>
+			&nbsp;&nbsp;&nbsp;}<br>
+			};<br>
+			obj.init();<br>
+			</div>
+		</div>
+		<div class="exam_wrap">
+			<h1>Q. 객체 내에서 다른 객체의 메서드를 호출해보세요.</h1>
+			<div class="exam_q">예시)<br>
+			var obj = {<br>
+			&nbsp;&nbsp;&nbsp;init : function () {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 객체 obj2 의 init 을 호출해봐요~<br>
+			&nbsp;&nbsp;&nbsp;}<br>
+			};<br>
+			var obj2 = {<br>
+			&nbsp;&nbsp;&nbsp;init : function () {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log('call');<br>
+			&nbsp;&nbsp;&nbsp;}<br>
+			};<br>
+			obj.init();<br>
+			</div>
+		</div>
+		<div class="exam_wrap">
+			<h1>Q. 데이터 타입들을 모두 넣은후, 값들을 출력해보세요.</h1>
+			<div class="exam_q">예시)<br>
+			var obj = {<br>
+			&nbsp;&nbsp;&nbsp;func : function () {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log('func');<br>
+			&nbsp;&nbsp;&nbsp;},<br>
+			&nbsp;&nbsp;&nbsp;num : 3,<br>
+			&nbsp;&nbsp;&nbsp;...<br>
+			};<br>
+			console.log(obj.func);<br>
+			console.log(obj.num);
+			</div>
+		</div>
+		<div class="exam_wrap">
+			<h1>Q. 객체내의 모든 속성들의 값을 배열에 저장한후, abc 순으로 sorting 하여, 'abcdefg' 문자열로 출력해보세요.</h1>
+			<div class="exam_q">예시)<br>
+			var obj = {<br>
+			&nbsp;&nbsp;&nbsp;e : 'e',<br>
+			&nbsp;&nbsp;&nbsp;d : 'd',<br>
+			&nbsp;&nbsp;&nbsp;b : 'b',<br>
+			&nbsp;&nbsp;&nbsp;g : 'g',<br>
+			&nbsp;&nbsp;&nbsp;c : 'c',<br>
+			&nbsp;&nbsp;&nbsp;f : 'f',<br>
+			&nbsp;&nbsp;&nbsp;a : 'a'<br>
+			};<br>
+			</div>
+		</div>
+		<div class="exam_wrap">
+			<h1>Q. 'bcaebe' 문자열을 hasOwnProperty 를 사용해서, {a : 1, b : 2, c : 1, e : 2} 로 변경해보세요.</h1>
+		</div>
+	</div>
+	<!-- container [e] -->
+	<hr />
+	<!-- footer [s] -->
+	<div id="footer">
+	</div>
+	<!-- footer [e] -->
+</div>
+<!-- wrapper [e] -->
+</body>
+</html>
