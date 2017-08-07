@@ -91,36 +91,6 @@ button::-moz-focus-inner{padding:0;border:0}
 				<div class="cast_num"><span class="current">1</span> / <span class="total">8</span></div>
 			</div>
 		</div>
-
-		<div class="slide_box">
-			<div class="slide_tab">
-				<ul>
-					<li class="active"><a href="#slide1">테마1</a></li>
-					<li><a href="#slide2">테마2</a></li>
-					<li><a href="#slide3">테마3</a></li>
-					<li><a href="#slide4">테마4</a></li>
-					<li><a href="#slide5">테마5</a></li>
-					<li><a href="#slide6">테마6</a></li>
-					<li><a href="#slide7">테마7</a></li>
-					<li><a href="#slide8">테마8</a></li>
-				</ul>
-			</div>
-			<div class="slide_cont">
-				<div id="slide1" class="slide_article active">컨텐츠1</div>
-				<div id="slide2" class="slide_article">컨텐츠2</div>
-				<div id="slide3" class="slide_article">컨텐츠3</div>
-				<div id="slide4" class="slide_article">컨텐츠4</div>
-				<div id="slide5" class="slide_article">컨텐츠5</div>
-				<div id="slide6" class="slide_article">컨텐츠6</div>
-				<div id="slide7" class="slide_article">컨텐츠7</div>
-				<div id="slide8" class="slide_article">컨텐츠8</div>
-			</div>
-			<div class="slide_setting">
-				<div class="slide_btn">
-					<button type="button">이전</button><button type="button">다음</button>
-				</div>
-			</div>
-		</div>
 	</div>
 	<!-- container [e] -->
 	<hr />
@@ -131,61 +101,84 @@ button::-moz-focus-inner{padding:0;border:0}
 <!-- [ Javascript Area ] -->
 <!-- Libs -->
 <script src="http://code.jquery.com/jquery-latest.js"></script>
-<script>
+<script type="text/javascript">
 var exam = exam || {};
 exam.View = exam.View || {};
 exam.View.carousel = exam.View.carousel || {};
-
 exam.View.carousel = function(htOptions) {
-    $.extend(this, htOptions || {});
-    this.init();
+	$.extend(this, htOptions || {});
+	this.init();
 };
 exam.View.carousel.prototype = {
 	sTarget: '',
+	nPageNum: true,
 	nDefaultIndex : 0,
-	init : function () {
+	init: function() {
 		this._assignElements();
+		this._attachEventHandlers();
 		this.nCurrentIndex = this.nDefaultIndex;
-		if (this._nTotalItem > 1) {
-			this._elBtnWrap.show();
-			this._attachEventHandlers();
-			this._showBanner(this.nCurrentIndex);
+		if(this.nPageNum){
+			this._setPageNum();
 		}
 	},
 	_assignElements: function() {
 		this._elCarouselWrap = $(this.sTarget);
-		this._elCarouselBox = this._welCarouselWrap.find('.cast_box');
-        this._elCarouselTabWrap = this._welCarouselBox.find('.cast_tab');
-        this._elCarouselTabItem = this._welCarouselTabWrap.find('>ul>li');
-        this._elCarouselTab = this._welCarouselTabItem.find('a');
-		this._elBtnWrap = this.welement.find(this.sBtnWrap);
-		this._elBtnPrev = this._elBtnWrap.find(this.sBtnPrev);
-		this._elBtnNext = this._elBtnWrap.find(this.sBtnNext);
-		this._elIndicator = this.welement.find(this.nDefaultIndex);
+		this._elCarouselBox = this._elCarouselWrap.find('.cast_box');
+		this._elCarouselTabWrap = this._elCarouselBox.find('.cast_tab');
+		this._elCarouselTabItem = this._elCarouselTabWrap.find('>ul>li');
+		this._elCarouselTab = this._elCarouselTabItem.find('a');
+		this._elCarouselCont = this._elCarouselBox.find('.cast_cont');
+		this._elCarouselArticle = this._elCarouselCont.find('.cast_article');
+		this._elCarouselSetting = this._elCarouselBox.find('.cast_setting');
+		this._elCarouselPrevBtn = this._elCarouselSetting.find('.btn_prev');
+        this._elCarouselNextBtn = this._elCarouselSetting.find('.btn_next');
+		if(this.nPageNum){
+			this._elCarouselPage = this._elCarouselSetting.find('.cast_num')
+			this._elCarouselCurrent = this._elCarouselPage.find('.current');
+			this._elCarouselTotal = this._elCarouselPage.find('.total');
+		}
 	},
 	_attachEventHandlers: function() {
-		this._elCarouselTab.on('click', $.proxy(this._onClickIndicator, this));
-		this._elBtnPrev.on('click', $.proxy(this._onClickShowPrev, this));
-		this._elBtnNext.on('click', $.proxy(this._onClickShowNext, this));
-		this.sIndicator.on('click', 'a', $.proxy(this._onClickIndicator, this));
+		this._elCarouselTab.on('click', $.proxy(this._onClickTabBtn, this));
+		this._elCarouselPrevBtn.on('click', $.proxy(this._onClickPrevBtn, this));
+		this._elCarouselNextBtn.on('click', $.proxy(this._onClickNextBtn, this));
 	},
-	_onClickIndicator: function(e) {
+	_onClickTabBtn: function(e) {
 		e.preventDefault();
-
 		var currentTarget = $(e.currentTarget),
-            welTarget = $(currentTarget.attr('href'));
+			welTarget = $(currentTarget.attr('href'));
+		this.nNextIndex = this._elCarouselArticle.index(welTarget);
+		this._elCarouselTabItem.eq(this.nNextIndex).addClass('active').siblings().removeClass('active');
+		this._elIndicator();
 	},
-	_onClickShowPrev: function(e) {
+	_onClickPrevBtn: function(e) {
 		e.preventDefault();
-
-		this._showBanner(this.nCurrentIndex);
+		this.nNextIndex = (this.nCurrentIndex > 0) ? this.nCurrentIndex - 1 : this._elCarouselArticle.length - 1;
+		console.log(this.nNextIndex);
 	},
-	_showBanner: function(index) {
-		this._elBanner.eq(this.nCurrentIndex).addClass('active').show().siblings().removeClass('active');
-	}
-}
-$(function() {
+	_onClickNextBtn: function(e) {
+		e.preventDefault();
+		console.log('b');
+	},
+	_elIndicator:function(){
+		this._elCarouselArticle.eq(this.nNextIndex).show().siblings().hide();
 
+		this.nCurrentIndex = this.nNextIndex;  // 해당 인덱스 저장
+
+		if(this.nPageNum == true){  // 해당 넘버옵션이 있으면 페이징 되게함
+			this._setPageNum();
+		}
+	},
+	_setPageNum: function() {
+		this._elCarouselCurrent.text(this.nCurrentIndex + 1);
+		this._elCarouselTotal.text(this._elCarouselTabItem.length);
+	}
+};
+
+$(function() {
+	var oExamViewCarouselTypeTab = new exam.View.carousel({
+		sTarget: '#container'
+	});
 });
 </script>
 </body>
