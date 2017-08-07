@@ -81,43 +81,44 @@ var exam = exam || {};
 exam.View = exam.View || {};
 
 exam.View.exam01 = function() {
-	this.aAvatar = [];
-	for (var i = 0; i < 12; i++) {
-		this.aAvatar.push(i);
-	};
 	this.init();
 };
 
 exam.View.exam01.prototype = {
-	aDefault : 
+	_aNum: [],
 	init: function() {
 		this._assignElements();
 		this._attachEventHandlers();
+		this._hasIndexCheck();
 	},
 	_assignElements: function() {
 		this._welExamWrap = $('.create_wrap')
-		this._welExamResult = this._welExamWrap.find('.img_avatar');
+		this._welExamResult = this._welExamWrap.find('.swiper-slide');
 		this._welExamBtn = this._welExamWrap.find('.btn_random');
 	},
 	_attachEventHandlers: function() {
 		this._welExamBtn.on('click', $.proxy(this._onClickBtn, this));
 	},
 	_onClickBtn: function() {
-		var aAvatar = this._welExamResult;
-		if (this.aAvatar.length) {
-			console.log(this.aAvatar.splice(this._getRandomAvatar(this.aAvatar.length - 1, 0), 1)[0], this.aAvatar);
+		this._welExamResult.hide();
+		this._welExamResult.eq(this._aNum.pop()).show();
+		console.log(this._aNum);
+	},
+	_hasIndexCheck : function(){
+		this.nTotalAvatar = this._welExamResult.length;
+		for(var i = 0, max = this.nTotalAvatar; i < max; i++){
+			this._aNum.push(i);
 		}
 	},
-	_getRandomAvatar: function(max, min) {
-		return Math.floor( Math.random() * (max - min + 1) ) + min;
+	_random: function(){
+		return Math.floor(Math.random() * this._welExamResult.length + 1);
 	},
-	// _isInArray: function(changeimage) {
-	// 	if (arr[i] === item) {
-	// 		return true;
-	// 	}
-	// }
+	_onClickRandomBtn : function(){
+		if (this.nTotalAvatar.length < 1) {
+			this._hasIndexCheck();
+		}
+	}
 };
-
 $(function(){
 	var oExamViewExam01 = new exam.View.exam01();
 });
