@@ -45,7 +45,64 @@
 	</div>
 
 	<div style="height:2000px"></div>
-	
 </div>
+<script>	
+var exam = exam || {};
+exam.View = exam.View || {};
+exam.View.game = exam.View.game || {};
+exam.View.game.cocaplay = function() {
+	this.init();
+};
+exam.View.game.cocaplay.prototype = {
+	_bIsAnimated: false,
+	_nCheckedIndex: null,
+	init: function() {
+		this._assignElements();
+		this._attachEventHandlers();
+	},
+	_assignElements: function() {
+		this._welEvtWrap = $('.evt_wrap');
+		this._welClickList = this._welEvtWrap.find('#clickLst');
+		this._welClickListItem = this._welClickList.find('li');
+		this._welClickListInput = this._welClickListItem.find('input');
+		this._welGameList = this._welEvtWrap.find('#gameLst');
+		this._welGameListItem = this._welGameList.find('li');
+		this._welGameListGom = this._welGameListItem.find('.gom');
+		this._welBtnApp = this._welEvtWrap.find('.btn_app');
+	},
+	_attachEventHandlers: function() {
+		this._welBtnApp.on('click', $.proxy(this._onClickBtn, this));
+	},
+	_onClickBtn: function(e) {
+		e.preventDefault();
+		this._getSelectIndex();
+	},
+	_getSelectIndex: function() {
+		this._nCheckedIndex = this._welClickListInput.filter(':checked').parent().index();
+	},
+	_scrollBody: function() {
+		var oSelf = this,
+			bFlag = false,
+			nDuration = 400;
+		this._bIsAnimated = true;
+		$("html, body").animate({scrollTop : this._welGameList.offset().top -10}, nDuration, function() {
+			setTimeout(function() {
+				oSelf._bIsAnimated = false;
+				oSelf._startPlay();
+			}, nDuration);
+		});
+	},
+	_startPlay: function() {
+		var oSelectedGom = this._welGameListGom.eq(this._nCheckedIndex),
+			oWinner = '',
+			oLoser = '',
+			nRandom,
+			nDuration = 400;
+	}
+}
+$(function() {
+	var oExamViewGameCocaplay = new exam.View.game.cocaplay();
+});
+</script>
 </body>
 </html>
