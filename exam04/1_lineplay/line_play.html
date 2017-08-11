@@ -93,30 +93,33 @@ exam.View.exam01.prototype = {
 	},
 	_assignElements: function() {
 		this._welExamWrap = $('.create_wrap')
-		this._welExamResult = this._welExamWrap.find('.swiper-slide');
+		this._welExamSlide = this._welExamWrap.find('.swiper-slide');
 		this._welExamBtn = this._welExamWrap.find('.btn_random');
 	},
 	_attachEventHandlers: function() {
 		this._welExamBtn.on('click', $.proxy(this._onClickBtn, this));
 	},
 	_onClickBtn: function() {
-		this._welExamResult.hide();
-		this._welExamResult.eq(this._aNum.pop()).show();
+		this._welExamSlide.hide();
+		this._welExamSlide.eq(this._aNum.pop()).show();
+		if (this._aNum.length < 1) {
+			this._hasIndexCheck();
+		}
 		console.log(this._aNum);
 	},
-	_hasIndexCheck : function(){
-		this.nTotalAvatar = this._welExamResult.length;
-		for(var i = 0, max = this.nTotalAvatar; i < max; i++){
-			this._aNum.push(i);
+	_hasIndexCheck:function(){
+		this.nTotalAvatar = this._welExamSlide.length;
+
+		// 랜덤한 index값 array에 저장
+		while (this._aNum.length < this.nTotalAvatar) {
+			nRandom = Math.floor(Math.random() * this.nTotalAvatar);
+			if ($.inArray(nRandom, this._aNum) === -1) {
+				this._aNum.push(nRandom);
+			}
 		}
 	},
 	_random: function(){
-		return Math.floor(Math.random() * this._welExamResult.length + 1);
-	},
-	_onClickRandomBtn : function(){
-		if (this.nTotalAvatar.length < 1) {
-			this._hasIndexCheck();
-		}
+		return Math.floor(Math.random() * this._welExamSlide.length + 1);
 	}
 };
 $(function(){
