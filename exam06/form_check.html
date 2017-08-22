@@ -211,9 +211,10 @@ exam.View.form.Select.prototype = {
 		
 		var currentTarget = $(e.currentTarget),
 			 sTargetText = currentTarget.text();
-		this._welSelectBtn.text(sTargetText).trigger('click'); //클릭될때 trigger 오호 
+		//this._welSelectBtn.text(sTargetText).trigger('click'); 클릭될때 trigger 오호 
+		this._welSelectBtn.text(sTargetText).focus();
 		
-		// this._onClose();
+		this._onClose();
 	},
 	_onClose: function() {
         this._welSelectBtn.trigger('click');
