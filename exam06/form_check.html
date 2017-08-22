@@ -108,6 +108,9 @@ p{margin-bottom:30px;padding-bottom:10px;border-bottom:2px solid #da0707;font-si
 <!-- Libs -->
 <script src="js/libs/jquery-1.7.1.min.js"></script>
 <script>
+//clickout
+(function($,c,b){$.map("click dblclick mousemove mousedown mouseup mouseover mouseout change select submit keydown keypress keyup".split(" "),function(d){a(d)});a("focusin","focus"+b);a("focusout","blur"+b);$.addOutsideEvent=a;function a(g,e){e=e||g+b;var d=$(),h=g+"."+e+"-special-event";$.event.special[e]={setup:function(){d=d.add(this);if(d.length===1){$(c).bind(h,f)}},teardown:function(){d=d.not(this);if(d.length===0){$(c).unbind(h)}},add:function(i){var j=i.handler;i.handler=function(l,k){l.target=k;j.apply(this,arguments)}}};function f(i){$(d).each(function(){var j=$(this);if(this!==i.target&&!j.has(i.target).length){j.triggerHandler(e,[i.target])}})}}})(jQuery,document,"outside");
+
 var exam = exam || {};
 exam.View = exam.View || {};
 exam.View.form = exam.View.form || {};
@@ -138,7 +141,7 @@ exam.View.form.CheckBox.prototype = {
 		*/
 		welTarget = $(e.currentTarget);
 
-		welTarget.parent().toggleClass('chk_active', welTarget.is(':checked')) //해당하는 영역의 체크박스로 제어 
+		welTarget.parent().toggleClass('chk_active', welTarget.is(':checked')) //해당하는 영역의 체크박스(input)로 제어 
 	}
 };
 exam.View.form.Radio = function() {
@@ -193,8 +196,14 @@ exam.View.form.Select.prototype = {
 	},
 	_onClickSelect: function(e){
 		var oSelf = this;
-		this._welSelectListWrap.stop(true, true).slideToggle('fast', function () {
+		this._welSelectListWrap.stop(true, true).slideToggle('fast', function () { // stop을 쓰는 이유는 slidetoggle issue를 막기 위해서 
             oSelf._welSelectWrap.toggleClass('opened'); 
+
+            // outside 이벤트 처리
+            (!oSelf.objViewType) ? oSelf._welSelectWrap.on('clickoutside', $.proxy(oSelf._onClose, oSelf)) : oSelf._welSelectWrap.off('clickoutside');
+            
+            // 오픈상태 변경
+            oSelf.objViewType = !oSelf.objViewType;
         });
 	},
 	_onChanged:function(e){
@@ -202,9 +211,9 @@ exam.View.form.Select.prototype = {
 		
 		var currentTarget = $(e.currentTarget),
 			 sTargetText = currentTarget.text();
-		this._welSelectBtn.text(sTargetText);
+		this._welSelectBtn.text(sTargetText).trigger('click'); //클릭될때 trigger 오호 
 		
-		this._onClose();
+		// this._onClose();
 	},
 	_onClose: function() {
         this._welSelectBtn.trigger('click');
