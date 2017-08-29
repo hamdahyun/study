@@ -24,7 +24,7 @@
 				<label for="bx"><span class="blind">스키타는 베어</span></label>
 			</li>
 			<li class="rabx">
-				<input type="radio" name="beautybox" id="bx2" checked="checked" />
+				<input type="radio" name="beautybox" id="bx2">
 				<label for="bx2"><span class="blind">보드타는 베어</span></label>
 			</li>
 			<li class="rabx">
@@ -39,7 +39,7 @@
 	<div class="evt_ct2">
 		<ul class="game_area sp" id="gameLst">
 		<li class="lane"><div class="sp gom"></div></li>
-		<li class="lane2 winlane"><div class="sp gom" style="top:98px"></div></li>
+		<li class="lane2"><div class="sp gom"></div></li>
 		<li class="lane3"><div class="sp gom"></div></li>
 		</ul>
 	</div>
@@ -76,6 +76,7 @@ exam.View.game.cocaplay.prototype = {
 	_onClickBtn: function(e) {
 		e.preventDefault();
 		this._getSelectIndex();
+		this._scrollBody();
 	},
 	_getSelectIndex: function() {
 		this._nCheckedIndex = this._welClickListInput.filter(':checked').parent().index();
@@ -84,6 +85,9 @@ exam.View.game.cocaplay.prototype = {
 		var oSelf = this,
 			bFlag = false,
 			nDuration = 400;
+		if (this._bIsAnimated) {
+			return false;
+		}
 		this._bIsAnimated = true;
 		$("html, body").animate({scrollTop : this._welGameList.offset().top -10}, nDuration, function() {
 			setTimeout(function() {
@@ -92,12 +96,25 @@ exam.View.game.cocaplay.prototype = {
 			}, nDuration);
 		});
 	},
-	_startPlay: function() {
+	_startPlay:function(){
 		var oSelectedGom = this._welGameListGom.eq(this._nCheckedIndex),
 			oWinner = '',
 			oLoser = '',
 			nRandom,
 			nDuration = 400;
+		if (this.bIsWin) {
+			oWinner = oSelectedGom;
+		} else {
+			nRandom = Math.floor(Math.random() * this._welGameListGom.length - 1);
+			oWinner = this._welGameListGom.not(oSelectedGom).eq(nRandom);
+		}
+		oLoser = this._welGameListGom.not(oWinner);
+		oWinner.animate({'top': 98}, nDuration, function() {
+			$(this).parent().addClass('winlane');
+		});
+		oLoser.animate({'top': 50}, nDuration);
+		this._bIsClear = true;
+		console.log('선택한 index: ' + this._nCheckedIndex + '\n당첨된 index: ' + this._welGameListGom.index(oWinner));
 	}
 }
 $(function() {
